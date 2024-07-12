@@ -4,8 +4,12 @@ const {
   getAllTours,
   createNewTour,
   getTourById,
+  checkIdValid,
+  checkBody,
 } = require("../controllers/tourController");
 
-router.route("/").get(getAllTours).post(createNewTour);
+router.param("id", checkIdValid);
+
+router.route("/").get(getAllTours).post(checkBody, createNewTour);
 router.route("/:id").get(getTourById);
 module.exports = router;

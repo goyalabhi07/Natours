@@ -15,17 +15,31 @@ exports.createNewTour = (req, res) => {
 };
 
 exports.getTourById = (req, res) => {
-  tour = tours.filter((tour) => tour._id === req.params.id)[0];
+  res.status(200).json({
+    status: "success",
+    result: req.tour,
+  });
+};
+
+exports.checkIdValid = (req, res, next, val) => {
+  tour = tours.filter((tour) => tour._id === val)[0];
 
   if (!tour) {
-    res.status(404).json({
+    return res.status(404).json({
       status: "Fail",
       message: "No Tour with this ID",
     });
-  } else {
-    res.status(200).json({
-      status: "success",
-      result: tour,
+  }
+  req.tour = tour;
+  next();
+};
+
+exports.checkBody = (req, res, next) => {
+  if (!req.body.name) {
+    return res.status(400).json({
+      status: "fail",
+      message: "Missing Name or Price",
     });
   }
+  next();
 };
